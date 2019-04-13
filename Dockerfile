@@ -22,6 +22,7 @@ RUN set -e -x && \
     gpg --batch --verify openssl.tar.gz.asc openssl.tar.gz && \
     tar xzf openssl.tar.gz && \
     cd $VERSION_OPENSSL && \
+    ./Configure linux-x32 && \
     ./config --prefix=/opt/openssl no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong && \
     make depend && \
     make && \
@@ -33,7 +34,7 @@ RUN set -e -x && \
         /var/tmp/* \
         /var/lib/apt/lists/*
 
-FROM debian:stretch as unbound
+FROM arm32v7/debian:stretch as unbound
 LABEL maintainer="Matthew Vance"
 
 ENV NAME=unbound \
@@ -80,7 +81,7 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev make" && \
         /var/lib/apt/lists/*
 
 
-FROM debian:stretch
+FROM arm32v7/debian:stretch
 LABEL maintainer="Matthew Vance"
 
 ENV NAME=unbound \
